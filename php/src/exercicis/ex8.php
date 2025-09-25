@@ -1,27 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulari - exercici 8</title>
 </head>
 <body>
-    <form action="" method="post">
-<!-- 
-    Crea una pàgina HTML amb un formulari que demane:
-        Una adreça de correu electrònic (email)
-        Un missatge (textarea)
-    El formulari s’ha d’enviar mitjançant el mètode POST i validar:
-        Que el camp email conté una adreça vàlida (FILTER_VALIDATE_EMAIL)
-        Que els camps no estiguen buits (usa required en HTML i valida amb PHP)
-    Mostra un missatge de confirmació si tot és correcte, o d’error si el correu no és vàlid.
-    Assegura’t de protegir el contingut rebut amb htmlspecialchars() per evitar problemes de seguretat.
--->
+    <form action="<?= $_SERVER["PHP_SELF"];?>" method="POST">
+
         <label for="email">Correu electrònic: </label>
-        <input type="text" name="email" id="email">
+        <input type="text" name="email" id="email" required>
         <br><br>
         <label for="missatge">Missatge:</label>
-        <textarea name="missatge" id="missatge"></textarea>
+        <br>
+        <textarea name="missatge" id="missatge" cols="33" rows="5" required></textarea>
+        <br>
+        <br>
+        <input type="submit" value="Enviar">
+        <br>
+        <br>
     </form>
+    <?php
+       
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = trim($_POST['email'] ?? "");
+            $missatge = trim($_POST['missatge'] ?? "");
+            
+            if (!empty($email) && !empty($missatge)) {
+                if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    echo "<p><b>Correu electrònic: </b></p>" . htmlspecialchars($email);
+                    echo "<p><b>Missatge: </b></p>" . nl2br(htmlspecialchars($missatge));
+                } else {
+                    echo "<p style='color:red;'>El correu electrònic no és vàlid.</p>";
+                }
+            } else {
+                echo "No pot haver cap camp buit.";
+            }
+        }
+
+    ?>
 </body>
 </html>
